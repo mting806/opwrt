@@ -1,0 +1,18 @@
+#cloud-config
+disable_root: false
+ssh_pwauth: True
+chpasswd:
+  list: |
+    root:888
+  expire: false
+write_files:
+  - path: /etc/environment
+    permissions: 0644
+    owner: root
+    content: |
+      LANG=en_US.utf-8
+      LC_ALL=en_US.utf-8
+runcmd:
+- sed -i'.orig' -e's/without-password/yes/' /etc/ssh/sshd_config
+- systemctl restart sshd
+- yum -y remove cloud-init
